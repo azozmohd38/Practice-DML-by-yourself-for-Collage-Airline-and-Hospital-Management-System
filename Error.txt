@@ -1,0 +1,45 @@
+COMBINED ERD TASKS — DML EXECUTION ERROR LOG
+
+Systems: College Management System, Airline Information System, Hospital Management System
+
+Execution errors from the user's SSMS screenshots have been recorded. Some corrections and rerun results are still pending.
+
+For each actual error in SSMS, record:
+
+System:
+Script file and statement:
+Exact SQL Server error number and message:
+Cause:
+Correction made:
+Result after rerunning:
+
+College Management System
+Error entries: None recorded yet.
+
+Airline Information System
+
+Error 1
+Script file and statement: 02-Airline-DML.sql — DELETE FROM Airport WHERE AirportCode = 'BAH'.
+Exact SQL Server error: Msg 208, Level 16, State 1, Line 1: Invalid object name 'Airport'.
+Cause: SQL Server could not find Airport in the database context used for execution. The likely causes are that the airline tables were created in a different database, or the Airline DDL has not been run in this database.
+Correction made: The later screenshot shows the active database is AirlineInformationDB and duplicate-key errors on Airport rows, confirming that Airport exists there now. The exact change that resolved the original missing-object error is not visible.
+Result after rerunning: The original error is no longer shown; a later execution reached the INSERT statements and produced duplicate-key errors listed below.
+
+Error 2 — later execution attempt
+The screenshot visibly shows these errors; constraint names are clipped in the Messages pane:
+- Msg 2627, Level 14, State 1, Line 1: duplicate primary key while inserting Airport rows.
+- Msg 2627, Level 14, State 1, Line 14: duplicate primary key while inserting AirplaneType rows.
+- Msg 2627, Level 14, State 1, Line 27: duplicate key while inserting AirportAirplaneType rows.
+- Msg 547, Level 16, State 0, Line 40: INSERT conflicted with a foreign key while inserting Airplane rows; the constraint name is clipped.
+- Msg 2627, Level 14, State 1, Line 55: duplicate key while inserting Seat rows.
+- Msg 2627, Level 14, State 1, Line 61: duplicate key while inserting Flight rows.
+- Msg 2627, Level 14, State 1, Line 69: duplicate key while inserting FlightWeekday rows.
+- Msg 2627, Level 14, State 1, Line 77: duplicate key while inserting FlightLeg rows.
+Cause: Existing rows conflict with the script's sample primary keys, consistent with rerunning INSERT statements. At least one dependent insert also has a missing referenced value.
+Correction made: None yet. Do not rerun the INSERT section. Inspect current rows first; the screenshot does not show all Messages output, so additional errors may be below the visible area.
+Result after rerunning: Pending.
+
+Hospital Management System
+Error entries: None recorded yet.
+
+Pre-execution schema note (not an execution error): The question brief says students can take multiple exams and that departments conduct exams. The existing College CREATE TABLE script in this workspace has no StudentExam association table and no DepartmentID column in Exam. The College DML therefore targets the tables and columns that currently exist; those two relationships cannot be populated until the physical schema is aligned with the question brief.
